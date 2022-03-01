@@ -15,7 +15,6 @@ All scripts are run
 
 ```
 python3 script.py
-
 ```
 
 Apart from ipynb notebooks which need to be viewed using a ipynb platform.
