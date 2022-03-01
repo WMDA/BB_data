@@ -4,14 +4,15 @@ import os
 import re
 
 
-def data(csv):
+def data(csv, simplify=True):
     
     '''
     Function to load csv and  multiple responses from participants 
 
     Parameters
     ----------
-    csv: str. Name of csv to load
+    csv: str. Name of csv to load.
+    simplify: Boolean. Renames columns in dataframe to numbers (str) rather than the long format.
 
     Returns
     -------
@@ -35,14 +36,14 @@ def data(csv):
                     filepath.append(line)
                     
     t2 = re.findall(r'/.*/*',filepath[0])[0]
-
-
     df = pd.read_csv(f'{t2}/{csv}')
-    df.rename(columns=lambda x: re.sub(r'\D','', x), inplace=True)
+    
+    if simplify == True:
+        
+        df.rename(columns=lambda x: re.sub(r'\D','', x), inplace=True)
 
     df_bnumber =  df['7'].apply(lambda value: str(value))
     repeat_values = df[df_bnumber.str.contains('_2')]
-
     final_df = df.drop(index=repeat_values.index)
 
     return final_df
