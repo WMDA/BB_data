@@ -66,7 +66,7 @@ def data(csv, datapath, simplify=True, clean=False, drop_index=False):
     df = pd.read_csv(f'{t2}/{csv}')
 
     if simplify == True:
-        df.rename(columns=lambda x: re.sub(r'\D', '', x), inplace=True)
+        df.rename(columns=lambda name: re.sub(r'\D([^\s]+)', '', name), inplace=True)
 
     if clean == True:
         
@@ -79,11 +79,14 @@ def data(csv, datapath, simplify=True, clean=False, drop_index=False):
         except Exception:
             print('Unable to use index provided. Please make sure index is a list of int that are in range of the dataframe')
             sys.exit(1)
-
-
-    df_bnumber =  df['7'].apply(lambda value: str(value))
-    repeat_values = df[df_bnumber.str.contains('_2')]
-    final_df = df.drop(index=repeat_values.index)
+    
+    try:        
+        df_bnumber =  df['7.'].apply(lambda value: str(value))
+        repeat_values = df[df_bnumber.str.contains('_2')]
+        final_df = df.drop(index=repeat_values.index)
+    
+    except Exception:
+        final_df = df
 
     return final_df
 
