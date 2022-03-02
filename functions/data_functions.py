@@ -44,7 +44,7 @@ def load_enviornment(datapath):
     
     return data_path
 
-def data(csv, datapath, simplify=True, clean=False, drop_index=False):
+def data(csv: str, datapath: str, simplify=True, clean=False, drop_index=False):
     
     '''
     Function to load csv and remove multiple responses from participants. 
