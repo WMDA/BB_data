@@ -4,7 +4,6 @@ import os
 import re
 import sys
 
-
 def load_enviornment(datapath):
     
     '''
