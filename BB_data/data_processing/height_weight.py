@@ -94,8 +94,13 @@ def main():
 
     final_df = pd.concat([cm, ft, height_leftovers])
     final_df['bmi'] = calculating_bmi(final_df['19.'], final_df['20.'])
+    hc = final_df[final_df['7.'].str.contains('B1')]
+    an = final_df[final_df['7.'].str.contains('B2')]
+    hc['group'] = 'HC'
+    an['group'] = 'AN'
+    final_df = pd.concat([hc, an])
+    
     return final_df
 
 if __name__ == '__main__':
     bmi_df = main()
-    print(bmi_df)
