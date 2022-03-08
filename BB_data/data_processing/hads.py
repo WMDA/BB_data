@@ -2,7 +2,7 @@ from functions.data_functions import data
 from functions.behavioural_functions import scoring
 import pandas as pd
 
-def main(verbose=True):
+def main(verbose=False):
     
     '''
     Main function for scoring hads. 
@@ -43,5 +43,5 @@ def main(verbose=True):
     return hads_results
 
 if __name__ == '__main__':
-    hads = main()
+    hads = main(verbose=True)
 

@@ -96,6 +96,7 @@ def edeq_score(response:str):
     '''
    
     if 'day' not in response:
+        
         if 'time' not in response:
             score = behavioural_score(response)
             

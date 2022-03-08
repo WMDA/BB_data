@@ -2,7 +2,7 @@ from functions.data_functions import data
 from functions.behavioural_functions import scoring
 import pandas as pd
 
-def main(measure:str, verbose=True):
+def main(measure:str, verbose=False):
 
     '''
     main function for oci/wsas scoring.
@@ -59,6 +59,6 @@ def main(measure:str, verbose=True):
         return wsas_results
 
 if __name__ == '__main__':
-    oci = main('oci')
-    wsas = main('wsas')
+    oci = main('oci', verbose=True)
+    wsas = main('wsas', verbose=True)
 
