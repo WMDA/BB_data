@@ -11,11 +11,11 @@ def load_enviornment(datapath):
 
     Parameters
     ----------
-    datapath: str. Name of variable for datapath in the .env file.
+    datapath:str: Name of variable for datapath in the .env file.
 
     Returns
     -------
-    data_path: str. Datapath from .env file 
+    data_path:str: Datapath from .env file 
     '''
     
     try:
@@ -43,26 +43,31 @@ def load_enviornment(datapath):
     
     return data_path
 
-def data(csv: str, datapath: str, simplify=True, clean=False, drop_index=False):
+def data(csv: str, datapath: str, simplify=True, clean=False, drop_index=False, straight_import=False):
     
     '''
     Function to load csv and remove multiple responses from participants. 
 
     Parameters
     ----------
-    csv: str. Name of csv to load.
-    datapath: str. Name of variable for datapath in the .env file.
-    simplify: Boolean. Renames columns in dataframe to numbers (str) rather than the long format.
-    clean: Boolean. Clean the dataframe further by dropping values in an index
-    drop_index: list of int. List of int of index values to drop, to use with clean.
+    csv:str: Name of csv to load.
+    datapath:str: Name of variable for datapath in the .env file.
+    simplify:Boolean: Renames columns in dataframe to numbers (str) rather than the long format.
+    clean: Boolean: Clean the dataframe further by dropping values in an index
+    drop_index:int: List of int of index values to drop, to use with clean.
+    stright_import:Boolean: Loads csvs and does no processing to the data.
 
     Returns
     -------
-    final_df = pandas dataframe with removed multiple responses from participants.
+    final_df:pandas dataframe: Data with removed multiple responses from participants.
+    df:pandas dataframe: Data with no processing. Returned with stright_import=True.
     '''
 
     t2 = load_enviornment(datapath)
     df = pd.read_csv(f'{t2}/{csv}')
+
+    if straight_import == True:
+        return df
 
     if simplify == True:
         df.rename(columns=lambda name: re.sub(r'\D([^\s]+)', '', name), inplace=True)

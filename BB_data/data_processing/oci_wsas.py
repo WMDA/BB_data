@@ -18,7 +18,7 @@ def main(measure:str, verbose=False):
     wsas_results: pandas df of wsas results.
     '''
     
-    dropindex = [72, 136, 138, 139, 141, 143, 144, 152, 156, 158, 159, 160, 176, 178, 181]
+    dropindex = [72, 136, 138, 139, 141, 143, 144, 152, 156, 158, 159, 160, 167, 176, 178, 181, 182]
     df = data('questionnaire_data.csv', 't2', clean=True, drop_index=dropindex)
     
     if measure == 'oci':

@@ -17,7 +17,7 @@ def main(verbose=False):
     aq_final_df:pandas datframe: Scores for AQ10. 
     '''
 
-    dropindex = [72, 136, 138, 139, 141, 143, 144, 152, 156, 158, 159, 160, 176, 178, 181]
+    dropindex = [72, 136, 138, 139, 141, 143, 144, 152, 156, 158, 159, 160, 167, 176, 178, 181, 182]
     df = data('questionnaire_data.csv','t2', clean=True, drop_index=dropindex)
 
     aq_df = df.loc[:,'87.':'96.']
@@ -69,3 +69,4 @@ def main(verbose=False):
 
 if __name__ == '__main__':
     aq10 = main(verbose=True) 
+    print(aq10.shape)
