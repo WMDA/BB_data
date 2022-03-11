@@ -20,9 +20,10 @@ def main(verbose=False):
     df = data('questionnaire_data.csv', 't2', clean=True, drop_index=dropindex)
     hads_df = df.loc[:,'73.':'86.']
     null_index = hads_df[hads_df.isnull().any(axis=1)]
+    
     if verbose == True:
-        print(null_index)
-        print('\nNumber of null values:', '\n', hads_df.isnull().sum(), '\n')
+        print('\nNumber of null values:', '\n', hads_df.isnull().sum(), '\n') 
+        print('\nParticipants with null values:\n', df['7.'].iloc[null_index.index])
 
     score_df = scoring(hads_df)
     hads_final_df = pd.concat([df['7.'].drop(index=[31, 39]), score_df], axis=1)

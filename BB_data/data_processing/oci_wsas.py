@@ -30,13 +30,14 @@ def main(measure:str, verbose=False):
         
         hc = oci_results[oci_results['7.'].str.contains('B1')]
         an = oci_results[oci_results['7.'].str.contains('B2')]
-        hc['group'] = 'HC'
-        an['group'] = 'AN'
+        hc['group'] = 'HC_t2'
+        an['group'] = 'AN_t2'
         oci_results = pd.concat([hc, an])
         
         if verbose == True:
             print('\nNumber of null values:', '\n', oci_df.isnull().sum(), '\n') 
-            print(null_index)
+            print('\nParticipants with null values:\n', df['7.'].iloc[null_index.index])
+            
         
         return oci_results
     
@@ -48,13 +49,13 @@ def main(measure:str, verbose=False):
         wsas_results = pd.concat([df['7.'].drop(index=[49, 52]), wsas_scores], axis=1)
         hc = wsas_results[wsas_results['7.'].str.contains('B1')]
         an = wsas_results[wsas_results['7.'].str.contains('B2')]
-        hc['group'] = 'HC'
-        an['group'] = 'AN'
+        hc['group'] = 'HC_t2'
+        an['group'] = 'AN_t2'
         wsas_results = pd.concat([hc, an])
 
         if verbose == True:
-            print(null_index)
-            print('\nNumber of null values:', '\n', wsas_df.isnull().sum(), '\n')
+            print('\nNumber of null values:', '\n', wsas_df.isnull().sum(), '\n') 
+            print('\nParticipants with null values:\n', df['7.'].iloc[null_index.index])
         
         return wsas_results
 

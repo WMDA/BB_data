@@ -1,7 +1,6 @@
 from functions.data_functions import data
 from functions.behavioural_functions import scoring
 import pandas as pd
-import sys
 import warnings
 warnings.filterwarnings(action='ignore')# To ignore all pandas .loc slicing suggestions
 
@@ -28,9 +27,9 @@ def main(verbose=False):
 
 
     if verbose == True:
-        null = edeq_df[edeq_df.isnull().any(axis=1)]
-        print(edeq_df.isnull().sum())
-        print(null)
+        null_index = edeq_df[edeq_df.isnull().any(axis=1)]
+        print('\nNumber of null values:', '\n', edeq_df.isnull().sum(), '\n') 
+        print('\nParticipants with null values:\n', df['7.'].iloc[null_index.index])
 
     edeq_df = edeq_df.dropna()
     restraint = edeq_df[['25.', '26.', '27.', '28.', '29.']]
@@ -56,8 +55,8 @@ def main(verbose=False):
     edeq_group_df = pd.concat([edeq_df['7.'], edeq_scores], axis=1)
     hc = edeq_group_df[edeq_group_df['7.'].str.contains('B1')]
     an = edeq_group_df[edeq_group_df['7.'].str.contains('B2')]
-    hc['group'] = 'HC'
-    an['group'] = 'AN'
+    hc['group'] = 'HC_t2'
+    an['group'] = 'AN_t2'
 
 
     edeq_final_df = pd.concat([hc, an])

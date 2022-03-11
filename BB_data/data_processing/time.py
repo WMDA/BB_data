@@ -45,12 +45,13 @@ def main():
     difference['days'] = t2_dates - t1_dates
     difference['years'] = difference['days'] / np.timedelta64(1, 'Y')
 
-    time_df = pd.concat([time_points[['t1','t2']], difference, time_t2], axis=1)
+    time_df = pd.concat([time_points[['t1','t2']], difference[['days', 'years']], time_t2['group']], axis=1)
     return time_df
 
 
 if __name__ == '__main__':
     time_df = main() 
+
 
 
 
