@@ -24,7 +24,7 @@ def main(measure, describe=False):
     t1 = pd.concat([hc, an])
 
     if describe != False:
-        print(f'\n\nHC {describe}\n', hc[describe].describe(), f'\n\nAN {describe}\n', an[describe].describe(), f'\n\nCombined {describe}\n', t1[describe].describe())
+        print(f'\n\nHC {describe}\n', hc[describe].describe(), f'\n\nAN {describe}\n', an[describe].describe(), f'\n\nCombined {describe}\n', t1[describe].describe().dropna())
         
     hads['anxiety'] = hads[['67. Tense (a)', '69. Frightened (a)', '71. Worry (a)', '73. Relaxed (a)', '75. Frightened feeling (a)', '77. Restless (a)', '79. Panic (a)']].sum(axis=1)
     hads['depression'] = hads[['68. Enjoy (d)', '70. Laugh (d)', '72. Cheerful (d)', '74. Slowed down (d)', '76. Appearance interest (d)', '78. Looking forward to things (d)', 
@@ -40,7 +40,7 @@ def main(measure, describe=False):
     hc['group'] = 'HC_t1'
     an['group'] = 'AN_t1'
     edeq = pd.concat([hc, an])
-
+    
     if measure == 'edeq':
         return edeq[['PPT ID', 'Restraint', 'Eating Concern', 'Shape Concern', 'Weight Concern', 'Total Score', 'group']]
     elif measure == 'hads':
@@ -66,4 +66,5 @@ if __name__ == '__main__':
     aq10_score = main('aq10')
     wsas_score = main('wsas')
     
-    age = main('none', describe='Age')
+    age = main('none', describe='Initial_AQ10')
+

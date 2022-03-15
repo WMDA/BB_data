@@ -1,5 +1,7 @@
 import re
 import warnings
+import math
+
 warnings.filterwarnings(action='ignore')# To ignore all pandas .loc slicing suggestions
 
 def behavioural_score(response:str):
@@ -135,3 +137,27 @@ def scoring(df:object, edeq=False):
     score_df = df.filter(regex=r'SCORE')
     score_df['overall_score'] = score_df.sum(axis=1)
     return score_df
+
+
+def cohen_d(group1,group2):
+    
+    '''
+    Calculate cohens d.
+    
+    Parameters: 
+    ------------
+    group1: array or pandas series to test for effect size.
+    group2: array or pandas series to test for effect size.
+
+
+    Returns
+    -----------
+    Output: int cohen's d value.
+    
+    '''
+    
+    
+    diff = group1.mean() - group2.mean()
+    pooledstdev = math.sqrt((group1.std()**2 + group2.std())/2)
+    cohend = diff / pooledstdev
+    return cohend
