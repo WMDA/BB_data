@@ -1,4 +1,4 @@
-from functions.data_functions import data
+from functions.data_functions import data, connect_to_database, load_enviornment
 from functions.behavioural_functions import calculating_bmi
 import pandas as pd
 import numpy as np
@@ -11,6 +11,7 @@ def main():
     '''
     Main function. Takes no parameters and returns calculated BMI dataframe
     '''
+
     dropindex = [72, 136, 138, 139, 141, 143, 144, 152, 156, 158, 159, 160, 167, 176, 178, 181, 182]
     df = data('questionnaire_data.csv','t2', clean=True, drop_index=dropindex)
     bmi_df = df[['7.','19.','20.']].dropna()
@@ -104,3 +105,5 @@ def main():
 
 if __name__ == '__main__':
     bmi_df = main()
+    df = bmi_df.sort_values(by='7.').reset_index(drop=True).rename(columns={'7.':'b-number', '19.':'kg', '20.':'cm'})
+

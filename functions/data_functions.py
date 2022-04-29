@@ -1,10 +1,12 @@
 import pandas as pd
 from decouple import config
+from sqlalchemy import create_engine
+from base64 import b64decode
 import os
 import re
 import sys
 
-def load_enviornment(datapath):
+def load_enviornment(datapath:str):
     
     '''
     Function to load information from .env file.
@@ -43,13 +45,14 @@ def load_enviornment(datapath):
     
     return data_path
 
-def data(csv: str, datapath: str, simplify=True, clean=False, drop_index=False, straight_import=False):
+def data(csv:str, datapath:str, simplify:bool=True, clean:bool=False, drop_index=False, straight_import:bool=False):
     
     '''
     Function to load csv and remove multiple responses from participants. 
 
     Parameters
     ----------
+
     csv:str: Name of csv to load.
     datapath:str: Name of variable for datapath in the .env file.
     simplify:Boolean: Renames columns in dataframe to numbers (str) rather than the long format.
@@ -93,4 +96,42 @@ def data(csv: str, datapath: str, simplify=True, clean=False, drop_index=False, 
         final_df = df
 
     return final_df
+
+def connect_to_database(host:str, database:str, credentials:dict={'user':'Default','password':'Default'}):
+    
+    '''
+    Function to connect to an mysql/mariaDB database.
+
+    Parameters: 
+    -----------
+    host:str Host either IP or localhost 
+    Database:str  Name of database
+    credentials:dict dict of username and password details. If left to default will search for enviormental variables.
+    
+    Returns:
+    -------
+    engine:sqlalchemy engine connection
+    '''
+    
+    if credentials['user'] == 'Default' and credentials['password'] == 'Default':
+        
+        # Username and password are not stored on github!!
+
+        cred = {
+            'user': b64decode(load_enviornment('user')).decode(),
+            'password': b64decode(load_enviornment('password')).decode()
+        }
+
+    else:
+        cred = credentials
+
+    user = cred['user']
+    passwd = cred['password']
+
+    engine = create_engine(f'mysql+mysqlconnector://{user}:{passwd}@{host}/{database}')
+    
+    return engine 
+
+
+
 
