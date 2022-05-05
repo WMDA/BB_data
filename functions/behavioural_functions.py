@@ -4,7 +4,7 @@ import math
 
 warnings.filterwarnings(action='ignore')# To ignore all pandas .loc slicing suggestions
 
-def behavioural_score(response:str):
+def behavioural_score(response:str) -> int:
     
     '''
     Function to score questionnaire response.
@@ -22,7 +22,7 @@ def behavioural_score(response:str):
     return int(score)
 
 
-def calculating_bmi(weight:float, height:float, cm=True):
+def calculating_bmi(weight:float, height:float, cm=True) -> float:
 
     '''
     Function to calculate body mass index.
@@ -43,7 +43,7 @@ def calculating_bmi(weight:float, height:float, cm=True):
     bmi = weight/(height **2)
     return bmi
 
-def edeq_scoring_dict(response:str):
+def edeq_scoring_dict(response:str) -> int:
 
     '''
     Function to score ede-q responses where no int value is provided.
@@ -82,7 +82,7 @@ def edeq_scoring_dict(response:str):
     final_score = scoring_sheet[score[0]]
     return int(final_score)
 
-def edeq_score(response:str):
+def edeq_score(response:str) -> int:
 
     '''
     Function wrapper around behavioural_score and edeq_scoring_dict functions
@@ -98,7 +98,6 @@ def edeq_score(response:str):
     '''
    
     if 'day' not in response:
-        
         if 'time' not in response:
             score = behavioural_score(response)
             
@@ -110,7 +109,7 @@ def edeq_score(response:str):
     
     return int(score)
 
-def scoring(df:object, edeq=False):
+def scoring(df:object, edeq=False) -> object:
 
     '''
     Function to score behavioural questions and calculates total score.
@@ -139,7 +138,7 @@ def scoring(df:object, edeq=False):
     return score_df
 
 
-def cohen_d(group1,group2):
+def cohen_d(group1, group2):
     
     '''
     Calculate cohens d.
