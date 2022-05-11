@@ -30,6 +30,22 @@ import seaborn as sns
 sns.set_theme(style="dark")
 
 def clean(file:str, column:str, to_replace:str, replace:str):
+    
+    '''
+    Function that reads in data, prints out the number of null values in the data
+    and cleans the column by changing specified string to another string.
+
+    Parameters
+    ----------
+    file:str filepath to data
+    column:str column to clean
+    to_replace:str strig to replace in column
+    replace:str string to add into column
+
+    Returns
+    -------
+    columns_to_clean:dataframe Dataframe of participants id and cleaned column
+    '''
     df = pd.read_csv(file)
     
     columns_to_clean = df[['7. What is your B number?', column]] 
@@ -45,6 +61,22 @@ def clean(file:str, column:str, to_replace:str, replace:str):
     return columns_to_clean
 
 def further_clean(columns_to_clean:object, column:str, to_replace:str, replace:str):
+
+    '''
+    Function to further remove string from column.
+
+    Parameters
+    ----------
+    columns_to_clean:object dataframe
+    column:str column name to clean
+    to_replace:str strig to replace in column
+    replace:str string to add into column
+    
+    Returns
+    -------
+    columns_to_clean:dataframe Further cleaned column
+    '''
+
     columns_to_clean[column].replace(regex=True, inplace=True, to_replace=rf'{to_replace}', value=f'{replace}')
     return columns_to_clean
 
