@@ -23,8 +23,14 @@ fun.extract() Use this function to extract data from column.
 Write into function
 filepath
 column
+
+fun.check_column_values() Use this function to check what data type (i.e int, float etc)
+
+fun.sum_up_values_in_df() Use this function to sum up all unique values in a column
+
 '''
 
+from xmlrpc.client import boolean
 import pandas as pd
 import seaborn as sns
 sns.set_theme(style="dark")
@@ -99,3 +105,46 @@ def extract(file:str, column:str):
 def create_plotting_df(hc_df, an_df, column:str):
     plotting = pd.DataFrame([hc_df.sum(), hc_df.sum()], index=['HC','AN'], columns=[column])
     return plotting
+
+def check_column_values(file:str, column:str):
+    '''
+    This is a function to describe a column. It will also loop through each value 
+    
+    Parameters
+    ----------
+    file:str filepath to data
+    column:str column name to describe
+    
+    Returns
+    -------
+    Prints to terminal the descriptive values of the terminal and the 
+    '''
+    df = pd.read_csv(file)
+    print(df[column].describe())
+    df[column].apply(lambda value: print(type(value)))
+    
+
+def sum_up_values_in_df(file:str, column:str, verbose:bool=False):
+    
+    '''
+    Function to sum up all the unique values in a dataframe.
+    Prints out unique values  
+    
+    Parameters
+    ----------
+    file:str filepath to data
+    column:str column name to describe
+    verbose:bool Set to True if you want to print out the unique values as well.
+    This option is good if there are lots of unique values
+    
+    Returns
+    -------
+    Prints out unique values
+    
+    '''
+    
+    df = pd.read_csv(file)
+    print(df[column].value_counts())
+    
+    if verbose==True:
+        print(df[column].unique())
