@@ -30,7 +30,6 @@ fun.sum_up_values_in_df() Use this function to sum up all unique values in a col
 
 '''
 
-from xmlrpc.client import boolean
 import pandas as pd
 import seaborn as sns
 sns.set_theme(style="dark")
@@ -140,7 +139,6 @@ def sum_up_values_in_df(file:str, column:str, verbose:bool=False):
     Returns
     -------
     Prints out unique values
-    
     '''
     
     df = pd.read_csv(file)
