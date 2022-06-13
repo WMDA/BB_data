@@ -6,15 +6,14 @@ Usage:
 Create a script then 
 import base_functions as fun
 
+fun.remove_str()
+Function to read in data amd remove a lot of common string values.
+Needs filepath to data and column name.
+Also needs type of data being cleaned. Use psych for past psychiatric histories or meds for medication
+
 fun.clean()
 Write into the fun.clean():
-filepath to data
-column that you want to clean
-values you want to replace in the dataframe
-value you want to change to.
-Only call this function once
-
-fun.further_clean(). Use this function as many times as it takes to clean. Usage
+Needs data
 column that you want to clean
 values you want to replace in the dataframe
 value you want to change to.
@@ -28,47 +27,49 @@ fun.check_column_values() Use this function to check what data type (i.e int, fl
 
 fun.sum_up_values_in_df() Use this function to sum up all unique values in a column
 
+Suggested workflow. fun.remove_str() then use the output of this to go into func.clean()
 '''
 
 import pandas as pd
+import numpy as np
+import re
+import sys
 import seaborn as sns
 sns.set_theme(style="dark")
 
-def clean(file:str, column:str, to_replace:str, replace:str):
+def data_overview(file:str, column:str, verbose:bool):
     
     '''
-    Function that reads in data, prints out the number of null values in the data
-    and cleans the column by changing specified string to another string.
+    Function that reads in data,  prints to terminal null values, data types of column and description
 
     Parameters
     ----------
     file:str filepath to data
     column:str column to clean
-    to_replace:str strig to replace in column
-    replace:str string to add into column
+    verbose:bool if set to true will print out the data type of each column
 
     Returns
     -------
-    columns_to_clean:dataframe Dataframe of participants id and cleaned column
+    nothing: prints to terminal null values, data types of column and description
     '''
+    
     df = pd.read_csv(file)
+    column = df[['7. What is your B number?', column]] 
+    print('Datatypes of column:\n', column.dtypes)
+    print('Description of column:\n', column.describe())
     
-    columns_to_clean = df[['7. What is your B number?', column]] 
-    print('Datatypes of column:\n', columns_to_clean.dtypes)
-    
-    null = columns_to_clean[columns_to_clean.isnull().any(axis=1)]
-    print('Number of null values in:\n', columns_to_clean.isnull().sum())
+    null = column[column.isnull().any(axis=1)]
+    print('Number of null values in:\n', column.isnull().sum())
     print(null)
-
-    columns_to_clean = columns_to_clean.dropna()
-    columns_to_clean[column].replace(regex=True, inplace=True, to_replace=rf'{to_replace}', value=f'{replace}')
-
-    return columns_to_clean
-
-def further_clean(columns_to_clean:object, column:str, to_replace:str, replace:str):
+    
+    if verbose == True:
+        df[column].apply(lambda value: print(type(value)))
+    
+    
+def clean(file:object, column:str, to_replace:str, replace:str):
 
     '''
-    Function to further remove string from column.
+    Function to remove string from column.
 
     Parameters
     ----------
@@ -79,10 +80,12 @@ def further_clean(columns_to_clean:object, column:str, to_replace:str, replace:s
     
     Returns
     -------
-    columns_to_clean:dataframe Further cleaned column
+    columns_to_clean:dataframe cleaned column
     '''
-
+    
+    columns_to_clean = columns_to_clean.dropna()
     columns_to_clean[column].replace(regex=True, inplace=True, to_replace=rf'{to_replace}', value=f'{replace}')
+        
     return columns_to_clean
 
 def extract(file:str, column:str):
@@ -102,26 +105,8 @@ def extract(file:str, column:str):
     return dataframes
 
 def create_plotting_df(hc_df, an_df, column:str):
-    plotting = pd.DataFrame([hc_df.sum(), hc_df.sum()], index=['HC','AN'], columns=[column])
+    plotting = pd.DataFrame([hc_df.sum(), an_df.sum()], index=['HC','AN'], columns=[column])
     return plotting
-
-def check_column_values(file:str, column:str):
-    '''
-    This is a function to describe a column. It will also loop through each value 
-    
-    Parameters
-    ----------
-    file:str filepath to data
-    column:str column name to describe
-    
-    Returns
-    -------
-    Prints to terminal the descriptive values of the terminal and the 
-    '''
-    df = pd.read_csv(file)
-    print(df[column].describe())
-    df[column].apply(lambda value: print(type(value)))
-    
 
 def sum_up_values_in_df(file:str, column:str, verbose:bool=False):
     
@@ -146,3 +131,58 @@ def sum_up_values_in_df(file:str, column:str, verbose:bool=False):
     
     if verbose==True:
         print(df[column].unique())
+
+def compile_type(type:str) -> object:
+    
+    '''
+    Function to return re compile type. Will only accept psych or meds
+    
+    Parameters
+    ----------
+    type:str Either psych or meds
+    
+    Returns
+    -------
+    data:re.compile object 
+    '''      
+    if type == 'meds':
+        data = re.compile(r'[0-9]|mg|mcg|\(.*\)|\bo.\b|\bt..\b|\.|\bd.*y\b|once|twice|morning|evening|currently|taking|for|inhaler|\b\w\b|', re.I)
+    
+    elif type == 'psych':
+        data = re.compile(r'[0-9]|\(.*\)|\ba..\b|,|\.|�|diagno.*?\b|clin.*?\b|\)|not|offi.*?\b|\bi\b|\bnever\b|\bform.*?\b|\bmy\b|\bprevi.*?\b|\bha.*?\b|\bo.\b|with|:|\bhistor.*?\b|been|\bcurren.*?\b|yes|past', 
+                          re.I)
+    else:
+        print('Unknown type. Please choose from meds, psych or weight')
+        sys.exit(1) 
+    
+    return data
+    
+def remove_str(data:str, col:str, type:str):
+    
+    '''
+    Function to remove common str in data. Replaces str with empty values for further processing by clean function.
+    
+    Parameters
+    ----------
+    data:str filepath to data
+    col:str column name
+    type:str compile type only accepts psych or meds
+    
+    Returns
+    -------
+    column:pd.Series column of cleaned values
+    '''
+    
+    df = pd.read_csv(data)
+    column = df[col].dropna().str.lower()
+    data = compile_type(type) 
+    
+    if type == 'psych':
+        anorexia = re.compile(r'anorexia|anorexia nervosa|nervosa')
+        column.replace(regex=True, inplace=True, to_replace=anorexia, value='')
+        column.replace(regex=True, inplace=True, to_replace=r'^\s', value=np.NaN)
+        column = column.dropna()
+        
+    column.replace(regex=True, inplace=True, to_replace=data, value='')
+    column.replace(regex=True, inplace=True, to_replace=r'^\s', value='')
+    return column
