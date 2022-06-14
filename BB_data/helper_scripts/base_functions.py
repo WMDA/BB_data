@@ -92,7 +92,6 @@ def clean(file:object, replacement_str:str, *words_to_replace:str, regex:bool=Fa
         comp = list(words_to_replace)
         
     words = re.compile('|'.join(comp), re.IGNORECASE)
-    print(words)
     file.replace(regex=True, inplace=True, to_replace=words, value=replacement_str)
     return file
 
