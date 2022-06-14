@@ -164,7 +164,7 @@ def compile_type(type:str) -> object:
     
     return data
     
-def remove_str(data:str, col:str, type:str):
+def remove_str(data:str, col:str, type:str) -> pd.Series:
     
     '''
     Function to remove common str in data. Replaces str with empty values for further processing by clean function.
