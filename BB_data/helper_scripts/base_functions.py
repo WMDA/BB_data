@@ -66,7 +66,7 @@ def data_overview(file:str, column:str, verbose:bool):
         df[column].apply(lambda value: print(type(value)))
     
     
-def clean(file:object, column:str, to_replace:str, replace:str):
+def clean(file:object, replacement_str:str, *words_to_replace:str, regex:bool=False):
 
     '''
     Function to remove string from column.
@@ -75,18 +75,26 @@ def clean(file:object, column:str, to_replace:str, replace:str):
     ----------
     columns_to_clean:object dataframe
     column:str column name to clean
-    to_replace:str strig to replace in column
-    replace:str string to add into column
+    replacement_str:str string value to replace other string.
+    *words_to_replace:str args string to be replaced. 
+    regex:bool Default is False. Individual strings are treated as 
+               individual words with word boundaried added on the end.
+               Stops default regex patterns. Set True to allow regex.
     
     Returns
     -------
-    columns_to_clean:dataframe cleaned column
+    file[column]:dataframe cleaned column
     '''
     
-    columns_to_clean = columns_to_clean.dropna()
-    columns_to_clean[column].replace(regex=True, inplace=True, to_replace=rf'{to_replace}', value=f'{replace}')
+    if regex == False:
+        comp = [rf'\b{arg}\b' for arg in words_to_replace]
+    else:
+        comp = list(words_to_replace)
         
-    return columns_to_clean
+    words = re.compile('|'.join(comp), re.IGNORECASE)
+    print(words)
+    file.replace(regex=True, inplace=True, to_replace=words, value=replacement_str)
+    return file
 
 def extract(file:str, column:str):
     df = pd.read_csv(file)
@@ -146,10 +154,10 @@ def compile_type(type:str) -> object:
     data:re.compile object 
     '''      
     if type == 'meds':
-        data = re.compile(r'[0-9]|mg|mcg|\(.*\)|\bo.\b|\bt..\b|\.|\bd.*y\b|once|twice|morning|evening|currently|taking|for|inhaler|\b\w\b|', re.I)
+        data = re.compile(r'[0-9]|mg|mcg|\(.*\)|\bo.\b|\bt..\b|\.|\bd.*y\b|once|twice|morning|evening|currently|taking|for|inhal.*?\b|\b\w\b|\,|\&|\.|\-|\/|take|occasio.*?\b|and|help|with|prn|bd', re.I)
     
     elif type == 'psych':
-        data = re.compile(r'[0-9]|\(.*\)|\ba..\b|,|\.|�|diagno.*?\b|clin.*?\b|\)|not|offi.*?\b|\bi\b|\bnever\b|\bform.*?\b|\bmy\b|\bprevi.*?\b|\bha.*?\b|\bo.\b|with|:|\bhistor.*?\b|been|\bcurren.*?\b|yes|past', 
+        data = re.compile(r'[0-9]|\(.*\)|\ba..\b|,|\.|�|diagno.*?\b|clin.*?\b|\)|not|offi.*?\b|\bi\b|\bnever\b|\bform.*?\b|\bmy\b|\bprevi.*?\b|\bha.*?\b|\bo.\b|with|:|\bhistor.*?\b|been|\bcurren.*?\b|yes|past|\,|\&|\.|\-|\/', 
                           re.I)
     else:
         print('Unknown type. Please choose from meds, psych or weight')
