@@ -5,13 +5,16 @@ This script so far removes all the annoying strig and turns all the data types t
 column '21.' is the lowerst ever weight column and column '7.' is the BMI column 
 '''
 
-from functions.data_functions import data
 import pandas as pd
+import re
+import warnings
+warnings.filterwarnings(action='ignore')# To ignore all pandas .loc slicing suggestions
 
-csv_name = '' #Put name of the csv here. Remember the .csv extension.
+csv_name = '/home/wmda/data/questionnaire_data.csv' #Put name of the csv here. Remember the .csv extension.
 
 dropindex = [72, 136, 138, 139, 141, 143, 144, 152, 156, 158, 159, 160, 167, 176, 178, 181, 182]
-df = data(csv_name,'t2', clean=True, drop_index=dropindex)
+df = pd.read_csv(csv_name).drop(index=dropindex)
+df.rename(columns=lambda name: re.sub(r'\D([^\s]+)', '', name), inplace=True)
 bmi_df = df[['7.','21.']].dropna()
 
 kg = bmi_df[bmi_df['21.'].str.contains('kg', regex=True)]
