@@ -10,7 +10,7 @@ import re
 import warnings
 warnings.filterwarnings(action='ignore')# To ignore all pandas .loc slicing suggestions
 
-csv_name = '/home/wmda/data/questionnaire_data.csv' #Put name of the csv here. Remember the .csv extension.
+csv_name = '' #Put name of the csv here. Remember the .csv extension.
 
 dropindex = [72, 136, 138, 139, 141, 143, 144, 152, 156, 158, 159, 160, 167, 176, 178, 181, 182]
 df = pd.read_csv(csv_name).drop(index=dropindex)
