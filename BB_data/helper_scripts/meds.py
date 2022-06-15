@@ -1,5 +1,5 @@
 '''
-Template function to clean psychiatric history.
+Template function to clean medication history.
 '''
 
 import base_functions as fun
