@@ -46,5 +46,5 @@ lb['21.'] = lb['21.'].astype(float)
 '''
 Your code goes below this. What we needs to turn stone and pounds into kg. 
 In hight_weight.py there are single lines of code to do this and just needs to be copied over and
-the column name changing and the column name
+the column name changing.
 '''
