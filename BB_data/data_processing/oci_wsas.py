@@ -26,8 +26,7 @@ def main(measure: str, verbose=False) -> pd.DataFrame:
         null_index = oci_df[oci_df.isnull().any(axis=1)]
         oci_scores = scoring(oci_df)
         oci_results = pd.concat(
-            [df['7.'].drop(index=[2, 9, 39, 63, 64, 67, 85]), oci_scores], axis=1)
-
+            [df['7.'], oci_scores], axis=1).dropna()
         hc = oci_results[oci_results['7.'].str.contains('B1')]
         an = oci_results[oci_results['7.'].str.contains('B2')]
         hc['group'] = 'HC_t2'
@@ -48,7 +47,7 @@ def main(measure: str, verbose=False) -> pd.DataFrame:
         null_index = wsas_df[wsas_df.isnull().any(axis=1)]
         wsas_scores = scoring(wsas_df)
         wsas_results = pd.concat(
-            [df['7.'].drop(index=[49, 52]), wsas_scores], axis=1)
+            [df['7.'], wsas_scores], axis=1).dropna()
         hc = wsas_results[wsas_results['7.'].str.contains('B1')]
         an = wsas_results[wsas_results['7.'].str.contains('B2')]
         hc['group'] = 'HC_t2'

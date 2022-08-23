@@ -63,4 +63,5 @@ def main(verbose=False):
 
 
 if __name__ == '__main__':
-    edeq_score = main(verbose=True)
+    edeq_score = main(verbose=False)
+    

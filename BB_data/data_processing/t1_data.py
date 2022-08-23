@@ -1,13 +1,12 @@
 from functions.data_functions import data
 import pandas as pd
-import numpy as np
 import re
 import warnings
 # To ignore all pandas .loc slicing suggestions
 warnings.filterwarnings(action='ignore')
 
 
-def main(measure: str, describe: bool = False, drop=False) -> object:
+def main(measure: str, describe: str = None, drop=False) -> pd.DataFrame:
     '''
     Main function to calculate measures from time point one data.
 
@@ -42,7 +41,7 @@ def main(measure: str, describe: bool = False, drop=False) -> object:
     an['group'] = 'AN_t1'
     t1 = pd.concat([hc, an])
 
-    if describe != False:
+    if describe != None:
         print(f'\n\nHC {describe}\n', hc[describe].describe(), f'\n\nAN {describe}\n', an[describe].describe(
         ), f'\n\nCombined {describe}\n', t1[describe].describe().dropna())
 
@@ -85,5 +84,3 @@ if __name__ == '__main__':
     oci_score = main('oci')
     aq10_score = main('aq10')
     wsas_score = main('wsas')
-
-    age = main('none', describe='Initial_AQ10')

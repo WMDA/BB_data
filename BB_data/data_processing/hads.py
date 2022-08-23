@@ -27,7 +27,7 @@ def main(verbose=False):
 
     score_df = scoring(hads_df)
     hads_final_df = pd.concat(
-        [df['7.'].drop(index=[31, 39]), score_df], axis=1)
+        [df['7.'], score_df], axis=1).dropna()
 
     anxiety = hads_final_df[['73.SCORE', '75.SCORE', '77.SCORE',
                              '79.SCORE', '81.SCORE', '83.SCORE', '85.SCORE']].sum(axis=1)
@@ -48,3 +48,4 @@ def main(verbose=False):
 
 if __name__ == '__main__':
     hads = main(verbose=True)
+    

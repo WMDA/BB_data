@@ -27,11 +27,12 @@ def main():
     time = time.rename('finished')
     group = pd.concat([df_t2['7.'], time], axis=1)
 
+
     hc = group[group['7.'].str.contains('B1')]
     an = group[group['7.'].str.contains('B2')]
     hc['group'] = 'HC'
     an['group'] = 'AN'
-
+   
     time_t2 = pd.concat([hc, an])
     time_t2.sort_values(by=['7.'], inplace=True)
     time_t2 = time_t2.reset_index(drop=True)
@@ -48,8 +49,10 @@ def main():
 
     time_df = pd.concat([time_points[['t1', 't2']], difference[[
                         'days', 'years']], time_t2['group']], axis=1)
+    time_df = time_df.drop(axis=0, index=[133])
     return time_df
 
 
 if __name__ == '__main__':
     time_df = main()
+    

@@ -5,6 +5,7 @@ from base64 import b64decode
 import os
 import re
 
+
 def load_enviornment(datapath: str):
     '''
     Function to load information from .env file.
@@ -79,8 +80,10 @@ def data(csv: str, datapath: str, simplify: bool = True, straight_import: bool =
         final_df = dropped_known_repeats_df.drop(
             index=duplicates.index).reset_index(drop=True)
 
-    except Exception:
+
+    except Exception as e:
         final_df = df
+        print('unable to remove duplicates due to the following error:', e)
 
     if simplify == True:
         final_df.rename(columns=lambda name: re.sub(
@@ -89,37 +92,31 @@ def data(csv: str, datapath: str, simplify: bool = True, straight_import: bool =
     return final_df
 
 
-def connect_to_database(host: str, database: str, credentials: dict = {'user': 'Default', 'password': 'Default'}):
+def connect_to_database(database: str):
     '''
-    Function to connect to an mysql/mariaDB database.
+    Function to connect to an mysql/mariaDB database. Credential and host need to be stored in a
+    .env file
 
     Parameters: 
     -----------
-    host:str Host either IP or localhost 
     Database:str  Name of database
-    credentials:dict dict of username and password details. If left to default will search for enviormental variables.
 
     Returns:
     -------
     engine:sqlalchemy engine connection
     '''
 
-    if credentials['user'] == 'Default' and credentials['password'] == 'Default':
-
-        # Username and password are not stored on github!!
-
-        cred = {
-            'user': b64decode(load_enviornment('user')).decode(),
-            'password': b64decode(load_enviornment('password')).decode()
-        }
-
-    else:
-        cred = credentials
+    # Username and password are not stored on github!
+    cred = {
+        'user': b64decode(load_enviornment('user')).decode(),
+        'password': b64decode(load_enviornment('password')).decode(),
+    }
 
     user = cred['user']
     passwd = cred['password']
+    host = load_enviornment('host')
 
-    engine = create_engine(
+    connector = create_engine(
         f'mysql+mysqlconnector://{user}:{passwd}@{host}/{database}')
 
-    return engine
+    return connector
