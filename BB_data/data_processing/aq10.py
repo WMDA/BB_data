@@ -1,10 +1,11 @@
 from functions.data_functions import data
 import pandas as pd
 import warnings
-warnings.filterwarnings(action='ignore')# To ignore all pandas .loc slicing suggestions
+# To ignore all pandas .loc slicing suggestions
+warnings.filterwarnings(action='ignore')
+
 
 def main(verbose=False):
-    
     '''
     Main function for AQ10 scoring
 
@@ -16,11 +17,8 @@ def main(verbose=False):
     -------
     aq_final_df:pandas datframe: Scores for AQ10. 
     '''
-
-    dropindex = [72, 136, 138, 139, 141, 143, 144, 152, 156, 158, 159, 160, 167, 176, 178, 181, 182]
-    df = data('questionnaire_data.csv','t2', clean=True, drop_index=dropindex)
-
-    aq_df = df.loc[:,'87.':'96.']
+    df = data('questionnaire_data.csv', 't2', simplify=True)
+    aq_df = df.loc[:, '87.':'96.']
     aq_df['7.'] = df['7.']
 
     if verbose == True:
@@ -31,27 +29,29 @@ def main(verbose=False):
     aq_df = aq_df.dropna()
 
     disagree = {
-    'definitely disagree':1,
-    'slightly disagree':1,
-    'slightly agree':0,
-    'definitely agree':0
+        'definitely disagree': 1,
+        'slightly disagree': 1,
+        'slightly agree': 0,
+        'definitely agree': 0
     }
 
     agree = {
-    'definitely disagree':0,
-    'slightly disagree':0,
-    'slightly agree':1,
-    'definitely agree':1
+        'definitely disagree': 0,
+        'slightly disagree': 0,
+        'slightly agree': 1,
+        'definitely agree': 1
     }
 
     agree_df = aq_df[['87.', '93.', '94.', '96.']]
     disagree_df = aq_df[['88.', '89.', '90.', '91.', '92.', '95.']]
 
     for column in agree_df.columns:
-        agree_df[column + 'SCORE'] = agree_df[column].apply(lambda value: agree[value])
+        agree_df[column +
+                 'SCORE'] = agree_df[column].apply(lambda value: agree[value])
 
     for column in disagree_df.columns:
-        disagree_df[column + 'SCORE'] = disagree_df[column].apply(lambda value: disagree[value])
+        disagree_df[column +
+                    'SCORE'] = disagree_df[column].apply(lambda value: disagree[value])
 
     aq_score = pd.concat([agree_df, disagree_df], axis=1)
 
@@ -67,6 +67,7 @@ def main(verbose=False):
 
     return aq_final_df
 
+
 if __name__ == '__main__':
-    aq10 = main(verbose=True) 
+    aq10 = main(verbose=True)
     print(aq10.shape)

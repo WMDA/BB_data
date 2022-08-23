@@ -16,8 +16,7 @@ def main(verbose=False):
     hads_results: pandas dataframe of hads results
     '''
     
-    dropindex = [72, 136, 138, 139, 141, 143, 144, 152, 156, 158, 159, 160, 167, 176, 178, 181, 182]
-    df = data('questionnaire_data.csv', 't2', clean=True, drop_index=dropindex)
+    df = data('questionnaire_data.csv', 't2')
     hads_df = df.loc[:,'73.':'86.']
     null_index = hads_df[hads_df.isnull().any(axis=1)]
     
@@ -36,7 +35,6 @@ def main(verbose=False):
     an = hads_results[hads_results['7.'].str.contains('B2')]
     hc['group'] = 'HC'
     an['group'] = 'AN'
-
 
     hads_results = pd.concat([hc, an])
     

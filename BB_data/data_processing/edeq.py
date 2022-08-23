@@ -19,8 +19,7 @@ def main(verbose=False):
     edeq_final_df:pandas datframe: Scores for ede-q. 
     '''
 
-    dropindex = [72, 136, 138, 139, 141, 143, 144, 152, 156, 158, 159, 160, 167, 176, 178, 181, 182]
-    df = data('questionnaire_data.csv','t2', clean=True, drop_index=dropindex)
+    df = data('questionnaire_data.csv','t2')
 
     edeq_df = df[['7.','25.', '26.', '27.', '28.', '29.', '30.', '31.', '33.', '34.', '35.', '36.',
                '37.', '38.', '39.', '47.', '48.', '49.', '50.', '51.', '52.', '53.', '54.']]

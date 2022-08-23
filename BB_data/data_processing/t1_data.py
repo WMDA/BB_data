@@ -5,17 +5,35 @@ import re
 import warnings
 warnings.filterwarnings(action='ignore')# To ignore all pandas .loc slicing suggestions
 
-def main(measure, describe=False):
+def main(measure:str, describe:bool=False, drop=False) -> object:
+
+    '''
+    Main function to calculate measures from time point one data.
+
+    Parameters
+    ----------
+    measure:str Name of measure to be returned
+    describe:bool print out description of dataframe
+
+    Return
+    ------
+    object:dataframe of measure 
+    '''
+
     edeq_df = data('ede-q_individual_scores.csv', 't1', straight_import=True)
     t1_df = data('BEACON_participants.csv', 't1', straight_import=True)
     key_df = data('participant_index.csv', 't2', straight_import=True)
     hads_df = data('HADS_individual_scores.csv', 't1', straight_import=True)
-
-    key = re.compile('|'.join(key_df['t1'].to_list()))
-
-    t1 = t1_df[t1_df['G-Number'].str.contains(key, regex=True)]
-    edeq = edeq_df[edeq_df['PPT ID'].str.contains(key, regex=True)]
-    hads = hads_df[hads_df['PPT ID'].str.contains(key, regex=True)]
+    
+    if drop == True:
+        key = re.compile('|'.join(key_df['t1'].to_list()))
+        t1 = t1_df[t1_df['G-Number'].str.contains(key, regex=True)]
+        edeq = edeq_df[edeq_df['PPT ID'].str.contains(key, regex=True)]
+        hads = hads_df[hads_df['PPT ID'].str.contains(key, regex=True)]
+    else:
+        t1 = t1_df
+        edeq = edeq_df
+        hads = hads_df
     
     hc = t1[t1['G-Number'].str.contains('G1')]
     an = t1[t1['G-Number'].str.contains('G2')]
@@ -41,17 +59,17 @@ def main(measure, describe=False):
     an['group'] = 'AN_t1'
     edeq = pd.concat([hc, an])
     
-    if measure == 'edeq':
+    if measure.lower() == 'edeq':
         return edeq[['PPT ID', 'Restraint', 'Eating Concern', 'Shape Concern', 'Weight Concern', 'Total Score', 'group']]
-    elif measure == 'hads':
-        return hads
-    elif measure == 'bmi':
+    elif measure.lower() == 'hads':
+        return hads[['PPT ID','anxiety', 'depression', 'group']]
+    elif measure.lower() == 'bmi':
         return t1[['G-Number', 'BMI_baseline', 'group']]
-    elif measure == 'aq10':
+    elif measure.lower() == 'aq10':
         return t1[['G-Number', 'Initial_AQ10', 'group']]
-    elif measure == 'wsas':
+    elif measure.lower() == 'wsas':
         return t1[['G-Number', 'initial_WSAS', 'group']]
-    elif measure == 'oci':
+    elif measure.lower() == 'oci':
         return t1[['G-Number', 'Initial_OCI_Total_score', 'group']]
     else:
         print('unknown measure , returning nothing')
