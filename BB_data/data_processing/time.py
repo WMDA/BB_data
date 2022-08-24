@@ -52,7 +52,6 @@ def main():
     time_df = time_df.drop(axis=0, index=[133])
     return time_df
 
-
 if __name__ == '__main__':
     time_df = main()
     
