@@ -1,11 +1,15 @@
-from functions.data_functions import data
+import base_functions as fun
+import pandas as pd
 
 
-df = data('questionnaire_data.csv', 't2')
+df = pd.read_csv()
 
-clean = df['10.'].str.lower()
-clean.replace(regex=True, inplace=True, to_replace=r",|-", value='')
-clean.replace(regex=True, inplace=True,
-              to_replace=r"white british ", value='white british')
-print(clean.value_counts())
-#clean.apply(lambda x: print(x))
+clean = df['10. What is your ethnicity?']
+
+'''
+This should work now leave the first '' and you can put in as many words etc afterwards.
+'''
+
+fun.clean(clean, '', 'white', '/', 'British')
+
+print(clean)

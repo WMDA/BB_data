@@ -1,14 +1,15 @@
 from sklearn.cluster import KMeans
-from BB_data.data_processing.t1_data import main as t1
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
+from functions.data_functions import load_data
+
 
 # Call dataframes
-t1_ede_q_df = t1('edeq')
-t1_hads_df = t1('hads')
-t1_oci_df = t1('oci')
-t1_bmi_df = t1('bmi')
+t1_ede_q_df = load_data('BEACON', 'edeq_t1')
+t1_hads_df = load_data('BEACON', 'hads_t1')
+t1_oci_df = load_data('BEACON', 'oci_t1')
+t1_bmi_df = load_data('BEACON', 'bmi_t1')
 
 #Merge dataframes into one dataframe
 edeq_hads = t1_hads_df.merge(t1_ede_q_df, on='PPT ID', how='left')
@@ -20,7 +21,16 @@ t1_df = oci_bmi.merge(edeq_hads, on='G-Number', how='left')
 hc_t1 = t1_df[t1_df['G-Number'].str.contains('G1')].drop(['G-Number', 'group_x_x', 'group_x_y', 'group_y_x', 'group_y_y'], axis=1)
 an_t1 = t1_df[t1_df['G-Number'].str.contains('G2')].drop(['G-Number', 'group_x_x', 'group_x_y', 'group_y_x', 'group_y_y'], axis=1)
 
-# Preprocessing
+#----------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------
+'''
+Preprocessing Standardize features by removing the mean and scaling to unit variance.
+
+z = (x - u) / s
+
+where u is the mean and s is the standard deviation
+'''
+
 scaler = StandardScaler()
 hc_t1_std = scaler.fit_transform(hc_t1.dropna())
 an_t1_std = scaler.fit_transform(an_t1.dropna())

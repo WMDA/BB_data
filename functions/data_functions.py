@@ -12,11 +12,11 @@ def load_enviornment(datapath: str):
 
     Parameters
     ----------
-    datapath:str: Name of variable for datapath in the .env file.
+    datapath:str of name of variable for datapath in the .env file.
 
     Returns
     -------
-    data_path:str: Datapath from .env file 
+    data_path:str of datapath from .env file 
     '''
 
     try:
@@ -52,15 +52,15 @@ def data(csv: str, datapath: str, simplify: bool = True, straight_import: bool =
     Parameters
     ----------
 
-    csv:str: Name of csv to load.
-    datapath:str: Name of variable for datapath in the .env file.
-    simplify:Boolean: Renames columns in dataframe to numbers (str) rather than the long format.
-    stright_import:Boolean: Loads csvs and does no processing to the data.
+    csv:str conntaining name of csv to load.
+    datapath:str: containing the name of variable for datapath in the .env file.
+    simplify:Boolean that renames columns in dataframe to numbers (str) rather than the long format.
+    stright_import: Boolean that loads csvs and does no processing to the data.
 
     Returns
     -------
-    final_df:pandas dataframe: Data with removed multiple responses from participants.
-    df:pandas dataframe: Data with no processing. Returned with stright_import=True.
+    final_df:pandas dataframe of data with removed multiple responses from participants.
+    df:pandas dataframe of data with no processing. Returned with stright_import=True.
     '''
 
     t2 = load_enviornment(datapath)
@@ -79,7 +79,6 @@ def data(csv: str, datapath: str, simplify: bool = True, straight_import: bool =
         )]
         final_df = dropped_known_repeats_df.drop(
             index=duplicates.index).reset_index(drop=True)
-
 
     except Exception as e:
         final_df = df
@@ -120,3 +119,29 @@ def connect_to_database(database: str):
         f'mysql+mysqlconnector://{user}:{passwd}@{host}/{database}')
 
     return connector
+
+
+def load_data(database: str, table: str, show_tables: bool = False) -> pd.DataFrame:
+
+    '''
+    Function to load sql tables as dataframes.
+
+    Parameters
+    ---------
+    database: str of database name.
+    table: str of table name.
+    show_tables: boolean which if set to true prints all the tables in the database.
+
+    Returns
+    -------
+    pd.Dataframe of requested table
+    '''
+
+    connector = connect_to_database(database)
+    
+    if show_tables == False:
+        return pd.read_sql(table, connector)
+    else:
+        print(pd.read_sql("Show tables;", connector))
+
+
