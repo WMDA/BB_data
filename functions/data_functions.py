@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from base64 import b64decode
 import os
 import re
+import pickle
 
 
 def load_enviornment(datapath: str):
@@ -145,3 +146,47 @@ def load_data(database: str, table: str, show_tables: bool = False) -> pd.DataFr
         print(pd.read_sql("Show tables;", connector))
 
 
+
+def save_pickle(name: str, object_to_pickle: object) -> None:
+
+    '''
+    Function to save an object as pickle file in the pickle directory.
+
+    Parameters
+    ----------
+    name:str of name of file.
+    object_to_pickle: object to save as pickle file
+
+    Returns
+    -------
+    None
+    '''
+
+    pickle_path = os.path.join(config('root'), 'pickle')
+
+    with open(f'{pickle_path}/{name}.pickle', 'wb') as handle:
+        pickle.dump(object_to_pickle, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def load_pickle(name_of_pickle_object: str) -> object:
+
+    '''
+    Function to load pickle object in the work/pickle directory.
+
+    Parameters
+    ----------
+    name_of_pickle_object: str name of object to be loaded. 
+                           Doesn't need extension
+
+    Returns
+    -------
+    unpickled obect
+    '''
+
+    pickle_path = os.path.join(config('root'), 'pickle')
+
+    try: 
+        with open(f'{pickle_path}/{name_of_pickle_object}.pickle', 'rb') as handle:
+            return pickle.load(handle)
+    except Exception:
+        print('Unable to load pickle object')

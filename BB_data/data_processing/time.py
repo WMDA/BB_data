@@ -1,4 +1,5 @@
 from functions.data_functions import data
+import datetime
 import pandas as pd
 import numpy as np
 import re
@@ -39,7 +40,7 @@ def main():
 
     time_points = pd.concat([df_t1, time_t2['finished']], axis=1)
     time_points['finished'] = time_points['finished'].apply(
-        lambda value: re.sub(r'..:..:.. UTC', '', value))
+        lambda value: re.sub(r'..:..:.. UTC', '', value) if type(value) == str else value)
     t1_dates = pd.to_datetime(time_points['initial'], dayfirst=True)
     t2_dates = pd.to_datetime(time_points['finished'])
 
@@ -49,9 +50,8 @@ def main():
 
     time_df = pd.concat([time_points[['t1', 't2']], difference[[
                         'days', 'years']], time_t2['group']], axis=1)
-    time_df = time_df.drop(axis=0, index=[133])
+    time_df['group'].iloc[133] = 'AN'
     return time_df
 
 if __name__ == '__main__':
     time_df = main()
-    

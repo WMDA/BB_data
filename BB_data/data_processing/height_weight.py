@@ -1,4 +1,4 @@
-from functions.data_functions import data, connect_to_database, load_enviornment
+from functions.data_functions import data
 from functions.behavioural_functions import calculating_bmi
 import pandas as pd
 import numpy as np
@@ -114,7 +114,7 @@ def main():
                                                             else (height * 100 if height > 1 and height < 2
                                                             else height))
 
-    final_df = pd.concat([cm, ft, height_leftovers])
+    final_df = pd.concat([cm, ft, meters, height_leftovers])
     final_df['bmi'] = calculating_bmi(final_df['19.'], final_df['20.'])
     hc = final_df[final_df['7.'].str.contains('B1')]
     an = final_df[final_df['7.'].str.contains('B2')]
