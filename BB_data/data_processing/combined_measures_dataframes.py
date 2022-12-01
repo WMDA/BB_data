@@ -29,8 +29,7 @@ t1_wsas_df = pd.merge(participant_index['G_Number'], load_data('BEACON', 'wsas_t
     columns={'initial_WSAS': 'wsas_score_t1'}), right_on='G_Number', left_on='G_Number', how='left').sort_values('G_Number')
 
 t1_df = pd.concat([participant_index['G_Number'], t1_aq_df.drop(['G_Number', 'group'], axis=1), t1_hads_df.drop(['G_Number', 'group'], axis=1), t1_bmi_df.drop(['G_Number', 'group'], axis=1), t1_oci_df.drop(['G_Number', 'group'], axis=1), t1_wsas_df.drop(['G_Number', 'group'], axis=1), t1_ede_q_df.drop(['G_Number', 'group'], axis=1), t1_aq_df['group']], axis=1).drop('index', axis=1).sort_values('G_Number')
-index = t1_df[t1_df.isnull().any(axis=1)].reset_index(drop=True)
-print(index['G_Number'])
+
 # Load in data from time point 2
 ###########################################################################################################
 
@@ -65,10 +64,6 @@ t2_oci_df = pd.merge(participant_index['B_Number'], t2_oci_df[['B_Number', 'over
 
 
 t2_df = pd.concat([participant_index['B_Number'], t2_aq_df.drop(['B_Number', 'group'], axis=1), t2_hads_df.drop(['B_Number', 'group'], axis=1), t2_bmi_df.drop(['B_Number'], axis=1), t2_oci_df.drop(['B_Number'], axis=1), t2_wsas_df.drop(['B_Number'], axis=1), t2_ede_q_df.drop(['B_Number', 'group'], axis=1), t2_aq_df['group']], axis=1).drop('index', axis=1)
-
-index = t2_df[t2_df.isnull().any(axis=1)].reset_index(drop=True)
-print(index['B_Number'])
-#print(t2_df['B_Number'].iloc[index.index])
 
 # Connect amd save to database
 ########################################################################################################################################
