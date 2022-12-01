@@ -22,7 +22,7 @@ def t1(measure: str, describe: str = None, drop=False) -> pd.DataFrame:
     '''
 
     edeq_df = data('ede-q_individual_scores.csv', 't1', straight_import=True)
-    t1_df = data('BEACON_participants.csv', 't1', straight_import=True)
+    t1_df = data('BEACON_participants_behavioural_analysis.csv', 't1', straight_import=True)
     key_df = data('participant_index.csv', 't2', straight_import=True)
     hads_df = data('HADS_individual_scores.csv', 't1', straight_import=True)
 
