@@ -5,13 +5,13 @@ Uploads all the raw data as well as calculated scores as well as indexes into BE
 
 # Package uploads
 from functions.data_functions import connect_to_database, data, load_enviornment
-from BB_data.data_processing.hads import main as hads
-from BB_data.data_processing.oci_wsas import main as oci_wsas
-from BB_data.data_processing.height_weight import main as bmi
-from BB_data.data_processing.edeq import main as edeq
-from BB_data.data_processing.aq10 import main as aq10
-from BB_data.data_processing.time import main as time
-from BB_data.data_processing.t1_data import main as t1
+from BB_data.data_processing.hads import hads_scoring
+from BB_data.data_processing.oci_wsas import oci_scoring, wsas_scoring 
+from BB_data.data_processing.height_weight import bmi
+from BB_data.data_processing.edeq import edeq_scoring
+from BB_data.data_processing.aq10 import aq10_scoring
+from BB_data.data_processing.time import time_diff 
+from BB_data.data_processing.t1_data import t1 
 
 # External uploads
 import pandas as pd
@@ -21,13 +21,13 @@ import os
 connector = connect_to_database('BEACON')
 
 functions_time_point_2 = {
-    'hads_t2': hads().sort_values('7.').reset_index(drop=True).rename(columns={'7.': 'B_Number'}),
-    'oci_t2': oci_wsas('oci').sort_values('7.').reset_index(drop=True).rename(columns={'7.': 'B_Number'}),
-    'wsas_t2': oci_wsas('wsas').sort_values('7.').reset_index(drop=True).rename(columns={'7.': 'B_Number'}),
-    'bmi_t2': bmi().sort_values('7.').reset_index(drop=True).rename(columns={'7.': 'B_Number'}),
-    'edeq_t2': edeq().sort_values('7.').reset_index(drop=True).rename(columns={'7.': 'B_Number'}),
-    'aq10_t2': aq10().sort_values('7.').reset_index(drop=True).rename(columns={'7.': 'B_Number'}),
-    'time_difference': time()
+    'hads_t2': hads_scoring(),
+    'oci_t2': oci_scoring(),
+    'wsas_t2': wsas_scoring(),
+    'bmi_t2': bmi(),
+    'edeq_t2': edeq_scoring(),
+    'aq10_t2': aq10_scoring(),
+    'time_difference': time_diff()
 }
 
 functions_time_point_1 = {

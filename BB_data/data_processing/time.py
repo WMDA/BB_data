@@ -1,5 +1,4 @@
 from functions.data_functions import data
-import datetime
 import pandas as pd
 import numpy as np
 import re
@@ -8,7 +7,7 @@ import warnings
 warnings.filterwarnings(action='ignore')
 
 
-def main():
+def time_diff():
     '''
     Main function to calculate length of time between time point and time point 2
 
@@ -54,4 +53,4 @@ def main():
     return time_df
 
 if __name__ == '__main__':
-    time_df = main()
+    time_df = time_diff()

@@ -68,6 +68,8 @@ t2_df = pd.concat([participant_index['B_Number'], t2_aq_df.drop(['B_Number', 'gr
 t2_df['group'].loc[17] = 'HC'
 t2_df['group'].loc[47] = 'HC'
 
+index = t2_df[t2_df.isnull().any(axis=1)].reset_index(drop=True)
+print(t2_df['B_Number'].iloc[index.index])
 
 # Connect amd save to database
 ########################################################################################################################################

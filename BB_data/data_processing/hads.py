@@ -1,51 +1,36 @@
 from functions.data_functions import data
-from functions.behavioural_functions import scoring
+from functions.behavioural_functions import clean_up_columns, imputate, score
 import pandas as pd
 
 
-def main(verbose=False):
+def hads_scoring(verbose=False):
     '''
     Main function for scoring hads. 
 
-    Parameters
-    ----------
-    verbose: boolean, prints out number of null values and null values.
-
     Returns
     ------- 
-    hads_results: pandas dataframe of hads results
+    hads_scores: pandas dataframe of hads results
     '''
 
     df = data('questionnaire_data.csv', 't2')
+    
     hads_df = df.loc[:, '73.':'86.']
-    null_index = hads_df[hads_df.isnull().any(axis=1)]
+    hads_df['7.'] = df['7.']
 
-    if verbose == True:
-        print('\nNumber of null values:', '\n', hads_df.isnull().sum(), '\n')
-        print('\nParticipants with null values:\n',
-              df['7.'].iloc[null_index.index])
+    hads_df = clean_up_columns(hads_df)
+    hads_df = imputate(hads_df)
 
-    score_df = scoring(hads_df)
-    hads_final_df = pd.concat(
-        [df['7.'], score_df], axis=1).dropna()
+    anxiety = score(hads_df[['7.','73.', '75.', '77.',
+                             '79.', '81.', '83.', '85.', 'group']]).rename(columns={'overall_score': 'anxiety'})
+    depression = score(hads_df[['7.', '74.', '76.', '78.',
+                                '80.', '82.', '84.', '86.', 'group']])
 
-    anxiety = hads_final_df[['73.SCORE', '75.SCORE', '77.SCORE',
-                             '79.SCORE', '81.SCORE', '83.SCORE', '85.SCORE']].sum(axis=1)
-    depression = hads_final_df[['74.SCORE', '76.SCORE', '78.SCORE',
-                                '80.SCORE', '82.SCORE', '84.SCORE', '86.SCORE']].sum(axis=1)
+    hads_score = pd.concat([anxiety, depression.drop(['B_Number', 'group'], axis=1)], axis=1).rename(columns={'overall_score': 'depression'})
 
-    hads_results = pd.concat([hads_final_df[['7.', 'overall_score']], anxiety, depression], axis=1).rename(
-        columns={0: 'anxiety', 1: 'depression'})
-    hc = hads_results[hads_results['7.'].str.contains('B1')]
-    an = hads_results[hads_results['7.'].str.contains('B2')]
-    hc['group'] = 'HC'
-    an['group'] = 'AN'
-
-    hads_results = pd.concat([hc, an])
-
-    return hads_results
+    hads_score = hads_score[['B_Number', 'anxiety', 'depression', 'group' ]]
+    
+    return hads_score
 
 
 if __name__ == '__main__':
-    hads = main(verbose=True)
-    
+    hads = hads_scoring(verbose=True)

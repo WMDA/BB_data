@@ -7,7 +7,7 @@ import re
 import pickle
 
 
-def load_enviornment(datapath: str):
+def load_enviornment(datapath: str) -> str:
     '''
     Function to load information from .env file.
 

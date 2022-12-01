@@ -8,14 +8,29 @@ import warnings
 warnings.filterwarnings(action='ignore')
 
 
-def main():
+def bmi() -> pd.DataFrame:
+    
     '''
-    Main function. Takes no parameters and returns calculated BMI dataframe
+    Main function for calculating BMI. 
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    Pd.DataFrame of calculated BMI values.
     '''
 
     df = data('questionnaire_data.csv', 't2')
+    
+    # Hardcoded BMI from other sources
+    df['19.'].loc[df['7.'] == 'B1045'] = '99.5kg'
+    df['19.'].loc[df['7.'] == 'B2048'] = '79.3kg'
+    df['19.'].loc[df['7.'] == 'B2076'] = '53.0kg'
+    
     bmi_df = df[['7.', '19.', '20.']].dropna()
-
+    
     # filters kilograms and turns to float
     kg = bmi_df.loc[bmi_df['19.'].str.contains('g')]
     kg['19.'].replace(regex=True, inplace=True,
@@ -29,6 +44,8 @@ def main():
     kg['19.'].replace(regex=True, inplace=True, to_replace='', value=np.nan)
     kg = kg.dropna()
     kg['19.'] = kg['19.'].astype(float)
+    
+
 
     # filters stone, converts to float and then kilograms
     stone = bmi_df.loc[bmi_df['19.'].str.contains('tone')]
@@ -122,11 +139,10 @@ def main():
     an['group'] = 'AN'
     final_df = pd.concat([hc, an])
 
-    return final_df
+    return final_df.sort_values(by='7.').reset_index(drop=True).rename(
+        columns={'7.': 'B_Number', '19.': 'kg', '20.': 'cm'})
 
 
 if __name__ == '__main__':
-    bmi_df = main()
-    df = bmi_df.sort_values(by='7.').reset_index(drop=True).rename(
-        columns={'7.': 'b-number', '19.': 'kg', '20.': 'cm'})
-    print(df)
+    bmi_df = bmi()
+    print(bmi_df)

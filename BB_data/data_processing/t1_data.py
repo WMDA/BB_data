@@ -6,7 +6,8 @@ import warnings
 warnings.filterwarnings(action='ignore')
 
 
-def main(measure: str, describe: str = None, drop=False) -> pd.DataFrame:
+def t1(measure: str, describe: str = None, drop=False) -> pd.DataFrame:
+    
     '''
     Main function to calculate measures from time point one data.
 
@@ -78,9 +79,9 @@ def main(measure: str, describe: str = None, drop=False) -> pd.DataFrame:
 
 
 if __name__ == '__main__':
-    edeq_score = main('edeq')
-    hads_score = main('hads')
-    bmi_score = main('bmi')
-    oci_score = main('oci')
-    aq10_score = main('aq10')
-    wsas_score = main('wsas')
+    edeq_score = t1('edeq')
+    hads_score = t1('hads')
+    bmi_score = t1('bmi')
+    oci_score = t1('oci')
+    aq10_score = t1('aq10')
+    wsas_score = t1('wsas')

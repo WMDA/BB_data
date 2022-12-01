@@ -1,68 +1,60 @@
 from functions.data_functions import data
-from functions.behavioural_functions import scoring
+from functions.behavioural_functions import clean_up_columns, imputate, score
 import pandas as pd
 
 
-def main(measure: str, verbose=False) -> pd.DataFrame:
+def oci_scoring() -> pd.DataFrame:
+    
     '''
-    main function for oci/wsas scoring.
+    main function for oci scoring.
 
     Parameters
     ----------
-    measure: str, to calculate oci or wsas
-    verbose: boolean, prints out number of null values and null values.
+    None
 
     Returns
     -------
-    oci_results: pandas df of oci results
-    wsas_results: pandas df of wsas results.
+    oci_score: pandas df of oci results
+ 
     '''
 
     df = data('questionnaire_data.csv', 't2')
 
-    if measure == 'oci':
+    oci_df = df.loc[:, '55.':'72.']
+    oci_df = pd.concat([df['7.'], oci_df], axis=1)
+    
+    oci_scores = clean_up_columns(oci_df)
+    oci_scores = imputate(oci_scores)
+    oci_scores = score(oci_scores)
 
-        oci_df = df.loc[:, '55.':'72.']
-        null_index = oci_df[oci_df.isnull().any(axis=1)]
-        oci_scores = scoring(oci_df)
-        oci_results = pd.concat(
-            [df['7.'], oci_scores], axis=1).dropna()
-        hc = oci_results[oci_results['7.'].str.contains('B1')]
-        an = oci_results[oci_results['7.'].str.contains('B2')]
-        hc['group'] = 'HC_t2'
-        an['group'] = 'AN_t2'
-        oci_results = pd.concat([hc, an])
+    return oci_scores[['B_Number', 'overall_score', 'group']]
 
-        if verbose == True:
-            print('\nNumber of null values:', '\n',
-                  oci_df.isnull().sum(), '\n')
-            print('\nParticipants with null values:\n',
-                  df['7.'].iloc[null_index.index])
+def wsas_scoring() -> pd.DataFrame:
+    
+    '''
+    main function for wsas scoring.
 
-        return oci_results
+    Parameters
+    ----------
+    None
 
-    else:
+    Returns
+    -------
+    wsas_rscore: pandas df of wsas results.
+    '''
 
-        wsas_df = df.loc[:, '97.':'101.']
-        null_index = wsas_df[wsas_df.isnull().any(axis=1)]
-        wsas_scores = scoring(wsas_df)
-        wsas_results = pd.concat(
-            [df['7.'], wsas_scores], axis=1).dropna()
-        hc = wsas_results[wsas_results['7.'].str.contains('B1')]
-        an = wsas_results[wsas_results['7.'].str.contains('B2')]
-        hc['group'] = 'HC_t2'
-        an['group'] = 'AN_t2'
-        wsas_results = pd.concat([hc, an])
+    df = data('questionnaire_data.csv', 't2')
 
-        if verbose == True:
-            print('\nNumber of null values:', '\n',
-                  wsas_df.isnull().sum(), '\n')
-            print('\nParticipants with null values:\n',
-                  df['7.'].iloc[null_index.index])
+    wsas_df = df.loc[:, '97.':'101.']
+    wsas_df = pd.concat([df['7.'], wsas_df], axis=1)
+    wsas_score = clean_up_columns(wsas_df)
+    wsas_score = imputate(wsas_score)
+    wsas_score = score(wsas_score)
 
-        return wsas_results
+    return wsas_score[['B_Number', 'overall_score', 'group']]
 
 
 if __name__ == '__main__':
-    oci = main('oci', verbose=True)
-    wsas = main('wsas', verbose=True)
+    oci = oci_scoring()
+    wsas = wsas_scoring()
+
