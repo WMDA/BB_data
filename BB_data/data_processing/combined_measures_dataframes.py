@@ -64,7 +64,8 @@ t2_oci_df = pd.merge(participant_index['B_Number'], t2_oci_df[['B_Number', 'over
 
 
 t2_df = pd.concat([participant_index['B_Number'], t2_aq_df.drop(['B_Number', 'group'], axis=1), t2_hads_df.drop(['B_Number', 'group'], axis=1), t2_bmi_df.drop(['B_Number'], axis=1), t2_oci_df.drop(['B_Number'], axis=1), t2_wsas_df.drop(['B_Number'], axis=1), t2_ede_q_df.drop(['B_Number', 'group'], axis=1), t2_aq_df['group']], axis=1).drop('index', axis=1)
-
+index = t2_df[t2_df.isnull().any(axis=1)].reset_index(drop=True)
+print(index['B_Number'])
 # Connect amd save to database
 ########################################################################################################################################
 connector = connect_to_database('BEACON')
