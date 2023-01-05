@@ -9,3 +9,4 @@ mysql-connector
 scikit-learn
 scipy
 kneed
+bambi
