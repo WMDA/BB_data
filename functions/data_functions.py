@@ -112,10 +112,9 @@ def connect_to_database(database: str):
         'password': b64decode(load_enviornment('password')).decode(),
     }
 
-    user = cred['user']
-    passwd = cred['password']
+    user = cred['user'].rstrip('\n')
+    passwd = cred['password'].rstrip('\n')
     host = load_enviornment('host')
-
     connector = create_engine(
         f'mysql+mysqlconnector://{user}:{passwd}@{host}/{database}')
 
@@ -137,7 +136,7 @@ def load_data(database: str, table: str, show_tables: bool = False) -> pd.DataFr
     -------
     pd.Dataframe of requested table
     '''
-
+    
     connector = connect_to_database(database)
     
     if show_tables == False:
