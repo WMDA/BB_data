@@ -5,8 +5,8 @@ def read_requirements(file):
         return f.read().splitlines()
 
 VERSION = "0.0.1"
-DESCRIPTION = "SCN"
-LONG_DESCRIPTION = "Structural Covariance Network Analysis"
+DESCRIPTION = "BB_data"
+LONG_DESCRIPTION = "BB_data"
 REQUIREMENTS = read_requirements("requirements.txt")
 
 # Setting up
