@@ -106,13 +106,13 @@ def imputate(data: pd.DataFrame, np_round: bool=True) -> pd.DataFrame:
         an['group'] = 'AN'
 
         if hc.isnull().values.any() == True:
-            print('Null values detected in the HC data. Imputating data')
+            print(f'Null values detected in the HC data.\n Imputating data')
             hc_data = nn(hc, hc.shape[1], np_round)
         else: 
             hc_data = hc
 
         if an.isnull().values.any() == True:
-            print('Null values detected in the AN data. Imputating data')
+            print(f'Null values detected in the AN data. \nImputating data')
             an_data = nn(an, an.shape[1], np_round)
 
         else:
